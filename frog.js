@@ -28,7 +28,9 @@ var textcolor = new Color("#ffffff");
 // Fetch Image from Url
 async function fetchimageurl(url) {
   const request = new Request(url)
+  console.log("URL: " + url)
   var res = await request.loadImage();
+  console.log("RES: " + res)
   return res;
 }
 
@@ -40,7 +42,13 @@ function getformatteddate() {
 
 // Load image from local drive
 async function fetchimagelocal(path, isBackground) {
-  var finalPath = base_path + path + ".png";
+  var finalPath;
+  if (isBackground) {
+    finalPath = base_path + path.split("/").pop();
+    console.log("finalPath: " + finalPath);
+  } else {
+    finalPath = base_path + path + ".png";
+  }
   if (fm.fileExists(finalPath) == true) {
     console.log("file exists: " + finalPath);
     return finalPath;
@@ -64,7 +72,7 @@ async function fetchimagelocal(path, isBackground) {
 async function downloadimg(path, isBackground) {
   var imgurl = null;
   if (isBackground) {
-    imageUrl = path;
+    imgurl = path;
   } else {
     const url = "https://github.com/mhrice/frog-weather/raw/main/new-frog.json";
     const data = await fetchWeatherData(url);
@@ -156,7 +164,7 @@ async function select_random_bg(id, day_or_night) {
       id += "d";
     }
   }
-  images = data.background.id
+  images = data.background[id];
   const random = Math.floor(Math.random() * images.length);
   return images[random];
 }
@@ -194,10 +202,12 @@ const highTemp = curTempObj.temp_max;
 const lowTemp = curTempObj.temp_min;
 const feel_like = curTempObj.feels_like;
 //Completed loading weather data
-console.log("ID", id);
+console.log("ID");
+console.log(id)
 // Widget Background Image
-path = select_random_bg(id, iconData.includes("n") ? "night" : "day");
-console.log("Path", path);
+path = await select_random_bg(id, iconData.includes("n") ? "night" : "day");
+console.log("Path");
+console.log(path);
 widget.backgroundImage = Image.fromFile(await fetchimagelocal(path, true));
 
 //Start Spacing

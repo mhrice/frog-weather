@@ -59,7 +59,7 @@ async function fetchimagelocal(path, isBackground) {
       fm.createDirectory(base_path);
     }
     console.log("Downloading file: " + finalPath);
-    await downloadimg(path, isBackground);
+    await downloadimg(path, isBackground, finalPath);
     if (fm.fileExists(finalPath) == true) {
       console.log("file exists after download: " + finalPath);
       return finalPath;
@@ -69,7 +69,7 @@ async function fetchimagelocal(path, isBackground) {
   }
 }
 
-async function downloadimg(path, isBackground) {
+async function downloadimg(path, isBackground, finalPath) {
   var imgurl = null;
   if (isBackground) {
     imgurl = path;
@@ -144,7 +144,7 @@ async function downloadimg(path, isBackground) {
   }
   const image = await fetchimageurl(imgurl);
   console.log("Downloaded Image");
-  fm.writeImage(base_path + path + ".png", image);
+  fm.writeImage(finalPath, image);
 }
 
 //get Json weather
@@ -214,10 +214,10 @@ widget.backgroundImage = Image.fromFile(await fetchimagelocal(path, true));
 widget.addSpacer(0);
 
 //Widget weather Image
-var img = Image.fromFile(await fetchimagelocal(iconData + "_ico", false));
-var widgetimg = widget.addImage(img);
-widgetimg.imageSize = new Size(74, 74);
-widgetimg.rightAlignImage();
+// var img = Image.fromFile(await fetchimagelocal(iconData + "_ico", false));
+// var widgetimg = widget.addImage(img);
+// widgetimg.imageSize = new Size(74, 74);
+// widgetimg.rightAlignImage();
 
 // Widget Date
 var dateText = widget.addText(getformatteddate() + ", " + weathername);

@@ -8,11 +8,23 @@
 // Set that ID to CITY_WEATHER
 
 //API_KEY
-let API_WEATHER = "b352a644447eca79e479ca6b0aa2404f";
-let CITY_WEATHER = "5391811";
+let API_WEATHER = "";
+
+
+Location.setAccuracyToBest();
+let curLocation = await Location.current();
+console.log(curLocation.latitude);
+console.log(curLocation.longitude);
+let url = "http://api.openweathermap.org/data/2.5/weather?lat=" + curLocation.latitude + "&lon=" + curLocation.longitude + "&appid=" + API_WEATHER + "&units=metric";
+
+const data = await fetchWeatherData(url);
+console.log("City Name: " + data.name);
+console.log("City ID: " + data.id);
+
+let CITY_WEATHER = data.id
 let UNIT_TYPE = "F";//C for Celius and F for fernite
 
-//create Data 
+//create Data
 var today = new Date();
 
 //Initlize Widget
@@ -157,7 +169,7 @@ async function fetchWeatherData(url) {
 async function select_random_bg(id, day_or_night) {
   const url = "https://github.com/mhrice/frog-weather/raw/main/new-frog.json";
   const data = await fetchWeatherData(url);
-  if (Number(id) > 800) {
+  if (Number(id) >= 800) {
     if (day_or_night == "night") {
       id += "n";
     } else {
